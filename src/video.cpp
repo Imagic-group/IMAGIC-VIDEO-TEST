@@ -5,21 +5,21 @@
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
-const int FRAME_RATE = 30;
-const int FRAME_BUFFER_SIZE = 4 * WINDOW_WIDTH * WINDOW_HEIGHT;
+//const int FRAME_RATE = 30;
+//const int FRAME_BUFFER_SIZE = 4 * WINDOW_WIDTH * WINDOW_HEIGHT;
 
 void read_jpeg(std::istream& file, std::vector<char>& frame_buffer)
 {
     bool started = false;
 
-    for (size_t index = 0;;)
+    for (;;)
     {
         const int c1 = file.get();
         const int c2 = file.get();
         if (started)
         {
-            frame_buffer[index++] = c1;
-            frame_buffer[index++] = c2;
+            frame_buffer.push_back(c1);
+            frame_buffer.push_back(c2);
 
             const uint16_t code =((c1 << 8) | c2);
             if (code == 0xffd9)
@@ -30,8 +30,8 @@ void read_jpeg(std::istream& file, std::vector<char>& frame_buffer)
             const uint16_t code =((c1 << 8) | c2);
             if (code == 0xffd8)
             {
-                frame_buffer[index++] = c1;
-                frame_buffer[index++] = c2;
+                frame_buffer.push_back(c1);
+                frame_buffer.push_back(c2);
                 started = true;
             }
         }
@@ -40,7 +40,7 @@ void read_jpeg(std::istream& file, std::vector<char>& frame_buffer)
 
 cv::Mat get_frame(std::istream& file)
 {
-    std::vector<char> frame_buffer(FRAME_BUFFER_SIZE);
+    std::vector<char> frame_buffer;
 
     read_jpeg(file, frame_buffer);
 
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 {
     if (argc < 2)
     {
-        std::cout << "ERROR: unknown nameof background\n";
+        std::cout << "ERROR: unknown name of background\n";
         std::cout << "Usage: gphoto2 --capture-movie --stdout | ./video <background>";
 
         return 0;

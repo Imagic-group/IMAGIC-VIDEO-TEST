@@ -1,6 +1,6 @@
 # IMAGIC-VIDEO-TEST
 
-### Dependencies
+### Requirements
 
 * CMake
 * gPhoto2
